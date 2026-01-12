@@ -11,7 +11,6 @@ Repositori ini berisi tiga proyek machine learning komprehensif yang mendemonstr
 | **Nama** | Bagus Fatkhurrohman |
 | **Kelas** | Machine Learning |
 | **NIM** | 1103223195 |
-| **Tanggal** | 13-01-2026 |
 
 ---
 
