@@ -11,6 +11,7 @@ Repositori ini berisi tiga proyek machine learning komprehensif yang mendemonstr
 | **Nama** | Bagus Fatkhurrohman |
 | **Kelas** | Machine Learning |
 | **NIM** | 1103223195 |
+| **Tanggal** | 13-01-2026 |
 
 ---
 
@@ -113,38 +114,38 @@ finalterm-machine-learning/
 
 ---
 
-### Proyek 3: Fish Species Classification (Multi-Class Classification)
+### Proyek 3: Fish Image Classification (Deep Learning)
 
-**Objektif:** Klasifikasi spesies ikan berdasarkan pengukuran fisik (weight, length, height, width).
+**Objektif:** Membangun Convolutional Neural Network (CNN) untuk klasifikasi gambar ikan ke dalam 31 spesies yang berbeda.
 
-**Tipe Tugas:** Multi-Class Classification  
-**Target Variable:** `Species` (Bream, Roach, Whitefish, Parkki, Perch, Pike, Smelt)  
-**Dataset:** `Fish.csv`
+**Tipe Tugas:** Multi-Class Image Classification (Computer Vision)  
+**Target Variable:** 31 Kelas (misal: Bangus, Catfish, Tilapia, dll.)  
+**Ukuran Dataset:**
+- **Train:** 8,801 gambar
+- **Validation:** 2,751 gambar
+- **Test:** 1,760 gambar
 
-**Workflow:**
-1. Memuat dan eksplorasi dataset (EDA)
-2. Analisis feature distribution dan correlations
-3. Preprocessing:
-   - Label Encoding untuk Target Variable (`Species`)
-   - Standard Scaling untuk numerical features
-4. Melatih multiple classification models:
-   - Logistic Regression
-   - Support Vector Machine (SVM)
-   - Random Forest Classifier
-   - K-Nearest Neighbors (KNN)
-   - Decision Tree
-5. Evaluasi menggunakan classification metrics
-6. Analisis Confusion Matrix untuk identifikasi misclassifications
+**Implementasi Teknis:**
 
-**Key Metrics:**
-- **Accuracy:** Persentase spesies ikan yang terklasifikasi dengan benar
-- **Confusion Matrix:** Matrix yang menunjukkan true vs predicted species
-- **Classification Report:** Detailed Precision, Recall, dan F1-score per spesies
+1. **Data Preprocessing & Augmentation:**
+   - **Rescaling:** 1./255 (Normalisasi pixel values ke range 0-1)
+   - **Resize:** Semua gambar diubah ke **150x150** pixels
+   - **Augmentation:** Diterapkan pada training set untuk mencegah overfitting (Rotation 40°, Width/Height Shift, Shear, Zoom, Horizontal Flip)
 
-**Hasil Ekspektasi:**
-- Identifikasi model paling akurat untuk species prediction
-- Visualisasi Confusion Matrix
-- Analisis fitur fisik mana yang paling penting untuk membedakan spesies
+2. **CNN Architecture (Custom VGG-Style):**
+   - **Feature Extraction:** 4 Blocks dari `Conv2D` (Filters: 32 → 64 → 128 → 128) + `MaxPooling2D`
+   - **Classifier:** `Flatten` → `Dense` (512 units) → `Dropout` (0.5) → `Output` (31 units, Softmax)
+   - **Optimizer:** Adam
+   - **Loss Function:** Categorical Crossentropy
+
+3. **Training Strategy:**
+   - Dilatih selama **15 Epochs**
+   - Monitoring Training vs Validation Loss untuk deteksi overfitting
+
+**Key Findings:**
+- Mencapai **46.36% Accuracy** pada Test Data yang belum pernah dilihat
+- Meskipun <50%, ini signifikan mengingat kompleksitas (31 kelas). Random guessing hanya menghasilkan ~3.2% accuracy
+- Model performs **~14x lebih baik** dari random chance
 
 ---
 
@@ -175,16 +176,23 @@ finalterm-machine-learning/
 
 ---
 
-### Classification - Fish Species
+### Image Classification - Fish Species (Deep Learning CNN)
 
-| Model | Accuracy | F1 Score (Weighted) |
-|-------|----------|-------------------|
-| Logistic Regression | 0.89 | 0.88 |
-| SVM | 0.91 | 0.90 |
-| Random Forest | 0.96 | 0.96 |
-| KNN | 0.85 | 0.84 |
+**Training History (15 Epochs):**
 
-**✅ Best Model: Random Forest (Accuracy = 96%)**
+| Metric | Epoch 1 (Start) | Epoch 15 (End) | Test Set |
+|--------|-----------------|----------------|----------|
+| Accuracy | ~15% | 40.8% (Train) / 45.8% (Val) | **46.36%** |
+| Loss | > 3.0 | 1.82 | **1.79** |
+
+**Performance Analysis:**
+- **Generalization:** Model generalizes dengan baik - Validation Accuracy (~45.8%) sedikit lebih tinggi dari Training Accuracy (~40.8%), menunjukkan **Dropout (0.5)** dan **Data Augmentation** mencegah overfitting dengan efektif
+- **Baseline Comparison:**
+  - Random Guessing (1/31 classes): 3.2%
+  - Custom CNN: **46.36%**
+  - **Verdict:** Model performs **1400% lebih baik** dari random chance
+
+✅ **Best Model: Custom VGG-Style CNN (Accuracy = 46.36%)**
 
 ---
 
@@ -204,11 +212,10 @@ finalterm-machine-learning/
 - Dataset: `/MyDrive/dataset/midterm-regresi-dataset.csv`
 - Hasil: `notebooks/submissions/regression_submission.csv`
 
-**Proyek 3: Fish Classification**
+**Proyek 3: Fish Image Classification**
 - Notebook: `notebooks/3_Fish_Classification.ipynb`
-- Visualisasi: `images/Fish_Classification/`
-- Dataset: `/MyDrive/dataset/Fish.csv`
-- Hasil: `notebooks/submissions/fish_classification_results.csv`
+- Dataset: `data/fish-classification/` (train, val, test folders)
+- Hasil: Model weights dan predictions
 
 ### Urutan Pembacaan yang Direkomendasikan
 1. README.md (file ini)
@@ -224,12 +231,19 @@ finalterm-machine-learning/
 
 ### Persyaratan Dataset
 
-| Dataset | Ukuran | Path di Drive |
-|---------|--------|---------------|
-| train_transaction.csv | 667 MB | /MyDrive/dataset/train_transaction.csv |
-| test_transaction.csv | 598 MB | /MyDrive/dataset/test_transaction.csv |
-| midterm-regresi-dataset.csv | 433 MB | /MyDrive/dataset/midterm-regresi-dataset.csv |
-| Fish.csv | ~40 KB | /MyDrive/dataset/Fish.csv |
+**Tabular Data (Project 1 & 2):**
+- Tersimpan di `/MyDrive/dataset/`
+  - `train_transaction.csv` (667 MB)
+  - `test_transaction.csv` (598 MB)
+  - `midterm-regresi-dataset.csv` (433 MB)
+
+**Image Data (Project 3):**
+- Tersimpan di folder lokal `data/fish-classification/`
+  - `data/fish-classification/train/` - Training images (8,801 gambar)
+  - `data/fish-classification/val/` - Validation images (2,751 gambar)
+  - `data/fish-classification/test/` - Test images (1,760 gambar)
+
+*Note: Kode menggunakan `ImageDataGenerator` dengan `flow_from_directory` untuk load images secara otomatis*
 
 ---
 
@@ -251,7 +265,7 @@ finalterm-machine-learning/
 
 2. **Install required libraries:**
    ```bash
-   pip install pandas numpy scikit-learn xgboost matplotlib seaborn scipy
+   pip install pandas numpy scikit-learn xgboost matplotlib seaborn scipy tensorflow keras
    ```
 
 3. **Setup Google Drive:**
@@ -260,19 +274,14 @@ finalterm-machine-learning/
    drive.mount('/content/drive')
    ```
 
-4. **Load dataset:**
-   ```python
-   train_df = pd.read_csv('/content/drive/MyDrive/dataset/train_transaction.csv')
-   test_df = pd.read_csv('/content/drive/MyDrive/dataset/test_transaction.csv')
-   regression_df = pd.read_csv('/content/drive/MyDrive/dataset/midterm-regresi-dataset.csv')
-   fish_df = pd.read_csv('/content/drive/MyDrive/dataset/Fish.csv')
-   ```
-
-5. **Jalankan Jupyter Notebook:**
+4. **Jalankan Jupyter Notebook:**
    ```bash
    jupyter notebook
    ```
-   Navigasi ke folder `notebooks/` dan buka setiap notebook.
+   Navigasi ke folder `notebooks/` dan buka setiap notebook secara berurutan:
+   1. `1_Fraud_Detection_Classification.ipynb`
+   2. `2_Song_Release_Year_Regression.ipynb`
+   3. `3_Fish_Classification.ipynb` (Pastikan GPU runtime diaktifkan untuk CNN training lebih cepat)
 
 ---
 
